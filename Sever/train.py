@@ -7,7 +7,7 @@ from keras.layers import Dense,Dropout,BatchNormalization,GlobalAveragePooling2D
 from keras.models import Model
 from keras.callbacks import ReduceLROnPlateau,ModelCheckpoint,EarlyStopping
 from keras import regularizers
-from keras.callbacks import TensorBoard
+
 
 # 设备控制台输出配置
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -28,7 +28,7 @@ tf.app.flags.DEFINE_string('train_local', './output/', '训练输出文件夹')
 tf.app.flags.DEFINE_integer('keep_weights_file_num', 20, '如果设置为-1，则文件保持的最大权重数表示无穷大')
 FLAGS = tf.app.flags.FLAGS
 
-## test_acc = 0.89
+## test_acc = 0.9466
 def add_new_last_layer(base_model,num_classes):
     x = base_model.output
     x = GlobalAveragePooling2D(name='avg_pool')(x)
@@ -96,8 +96,6 @@ def train_model(FLAGS):
             ReduceLROnPlateau(monitor='val_loss', factor=0.1,
                             patience=10, mode='min'),
             EarlyStopping(monitor='val_loss', patience=10),
-            #acc曲线
-            TensorBoard(log_dir='mytensorboard'),
             ],
         validation_data = validation_sequence,
         max_queue_size = 10,
